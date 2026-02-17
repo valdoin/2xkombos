@@ -1,11 +1,13 @@
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
-const { getComboById } = useCombos();
+const { getComboById, addCombo } = useCombos();
 const { getCharImage, getDifficultyInfo } = useGameData();
+const { getInputIcon } = useInputData();
 
 const comboId = route.params.comboId as string;
 const charId = route.params.charId as string;
+const showEdit = ref(false)
 
 const combo = getComboById(comboId);
 if (!combo.value) {
@@ -13,7 +15,7 @@ if (!combo.value) {
 }
 
 useHead({ 
-  title: computed(() => combo.value?.title + ' - 2XKOMBOS' || 'Chargement...') 
+  title: computed(() => combo.value?.title ? `${combo.value.title} - 2XKOMBOS` : 'Chargement...') 
 })
 
 const charImage = computed(() =>
@@ -22,6 +24,23 @@ const charImage = computed(() =>
 const difficultyInfo = computed(() =>
   getDifficultyInfo(combo.value?.difficulty),
 );
+
+const parsedInputs = computed(() => {
+  if (!combo.value?.inputs) return []
+  return combo.value.inputs.split(' ')
+})
+
+function handleEdit(data: any) {
+  addCombo({ ...data, id: combo.value?.id, characterId: charId })
+}
+
+async function handleDelete() {
+  if (confirm('Voulez-vous vraiment supprimer ce combo ?')) {
+    const { deleteCombo } = useCombos() 
+    await deleteCombo(combo.value!.id)
+    router.push(`/${charId}`)
+  }
+}
 </script>
 
 <template>
@@ -65,20 +84,41 @@ const difficultyInfo = computed(() =>
 
             <v-divider class="mb-6 mx-8"></v-divider>
 
-            <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Inputs</div>
+            <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Sequence</div>
+            
             <div class="px-8 mb-8">
-              <v-sheet color="background" rounded="lg" class="pa-4 border-thin">
-                <code class="text-h5 font-weight-bold text-white">
-            {{ combo.inputs }}
-          </code>
+              <v-sheet color="background" rounded="lg" class="pa-6 border-thin">
+                <div class="d-flex flex-wrap align-center" style="gap: 8px;">
+                  <template v-for="(input, index) in parsedInputs" :key="index">
+                    <div class="d-flex align-center justify-center">
+                       <v-img 
+                         v-if="getInputIcon(input)" 
+                         :src="getInputIcon(input) || undefined" 
+                         width="42" 
+                         height="42"
+                         contain
+                       ></v-img>
+                       <span v-else class="text-h4 font-weight-bold text-primary mx-1">{{ input }}</span>
+                    </div>
+                  </template>
+                </div>
               </v-sheet>
             </div>
+            
+            <v-divider></v-divider>
+            
+            <div class="pa-4 d-flex justify-space-between">
+               <v-btn variant="text" prepend-icon="mdi-pencil" color="white" @click="showEdit = true">Modifier</v-btn>
+               <v-btn variant="text" prepend-icon="mdi-delete" color="error" @click="handleDelete">Supprimer</v-btn>
+            </div>
           </div>
+        </v-card>
+      </v-col>
+    </v-row>
 
-          <v-spacer></v-spacer>
-
-          <v-card v-if="charImage" :to="`/${combo.characterId}`" hover class="rounded-0 border-0 border-t-thin"
-            color="surface">
+    <v-row justify="center" class="mt-8" v-if="charImage">
+       <v-col cols="12" md="6" lg="4">
+          <v-card :to="`/${combo.characterId}`" hover class="border-thin" color="surface">
             <div class="d-flex align-center">
               <v-avatar rounded="0" size="80"><v-img :src="charImage" cover></v-img></v-avatar>
               <div class="pa-4">
@@ -91,8 +131,15 @@ const difficultyInfo = computed(() =>
               <v-icon class="mr-4">mdi-chevron-right</v-icon>
             </div>
           </v-card>
-        </v-card>
-      </v-col>
+       </v-col>
     </v-row>
+
+    <UploadDialog 
+      v-model="showEdit" 
+      edit-mode 
+      :initial-data="combo"
+      @submit="handleEdit" 
+    />
+
   </v-container>
 </template>

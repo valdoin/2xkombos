@@ -1,18 +1,45 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+
 const route = useRoute()
 const charId = route.params.charId as string 
-useHead({ title: `${charId.toUpperCase()} - 2XKOMBOS` })
-const { getCombosByChar, addCombo } = useCombos()
+useHead({ title: charId.toUpperCase() + ' - 2XKOMBOS' })
+const { getCombosByChar, addCombo, deleteCombo } = useCombos() 
 const { getCharData } = useGameData()
 
 const charCombos = getCombosByChar(charId) 
 const charData = computed(() => getCharData(charId))
-const showUpload = ref(false)
 
-function handleNewCombo(data: any) {
-  addCombo({ ...data, characterId: charId })
+const showUpload = ref(false)
+const editingCombo = ref<any>(null)
+
+function openCreateDialog() {
+  editingCombo.value = null
+  showUpload.value = true
 }
+
+function handleEdit(combo: any) {
+  editingCombo.value = combo 
+  showUpload.value = true
+}
+
+async function handleDelete(comboId: number) {
+  if (confirm("Es-tu sûr de vouloir supprimer ce combo ?")) {
+    await deleteCombo(comboId)
+  }
+}
+
+async function handleSubmit(data: any) {
+  await addCombo({ ...data, characterId: charId })
+  showUpload.value = false
+  editingCombo.value = null
+}
+
+watch(showUpload, (val) => {
+  if (!val) {
+    setTimeout(() => { editingCombo.value = null }, 300)
+  }
+})
 </script>
 
 <template>
@@ -34,7 +61,14 @@ function handleNewCombo(data: any) {
         <div class="px-4 pb-6">
           <v-container>
             <h1 class="text-h2 font-weight-black text-uppercase text-white mb-4">{{ charId }}</h1>
-            <v-btn variant="flat" prepend-icon="mdi-plus" @click="showUpload = true" class="bg-primary text-black font-weight-bold">Ajouter un Combo</v-btn>
+            <v-btn 
+                variant="flat" 
+                prepend-icon="mdi-plus" 
+                @click="openCreateDialog" 
+                class="bg-primary text-black font-weight-bold"
+            >
+                Ajouter un Combo
+            </v-btn>
           </v-container>
         </div>
       </div>
@@ -48,11 +82,22 @@ function handleNewCombo(data: any) {
 
       <v-row v-else>
         <v-col v-for="combo in charCombos" :key="combo.id" cols="12" md="4">
-          <ComboCard :combo="combo" />
+          
+          <ComboCard 
+            :combo="combo" 
+            @edit="handleEdit" 
+            @delete="handleDelete" 
+          />
+          
         </v-col>
       </v-row>
     </v-container>
 
-    <UploadDialog v-model="showUpload" @submit="handleNewCombo" />
+    <UploadDialog 
+      v-model="showUpload" 
+      :edit-mode="!!editingCombo"
+      :initial-data="editingCombo"
+      @submit="handleSubmit" 
+    />
   </div>
 </template>

@@ -20,6 +20,7 @@ export const useCombos = () => {
 
   const addCombo = async (comboData: any) => {
     const fd = new FormData()
+    if (comboData.id) fd.append('id', comboData.id)
     fd.append('characterId', comboData.characterId)
     fd.append('title', comboData.title)
     fd.append('damage', comboData.damage)
@@ -34,11 +35,30 @@ export const useCombos = () => {
     }
 
     try {
+      const method = comboData.id ? 'PUT' : 'POST'
       const response = await $fetch('/api/combos', {
-        method: 'POST',
+        method,
         body: fd
       })
-      combos.value.push(response)
+
+      if (method === 'POST') {
+        combos.value.push(response)
+      } else {
+        const index = combos.value.findIndex(c => c.id === response.id)
+        if (index !== -1) combos.value[index] = response
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const deleteCombo = async (id: number) => {
+    try {
+      await $fetch('/api/combos', {
+        method: 'DELETE',
+        body: { id }
+      })
+      combos.value = combos.value.filter(c => c.id !== id)
     } catch (e) {
       console.error(e)
     }
@@ -47,6 +67,7 @@ export const useCombos = () => {
   return {
     combos,
     addCombo,
+    deleteCombo,
     loadCombos,
     getCombosByChar: (charId: string) => computed(() => combos.value.filter(c => c.characterId === charId)),
     getComboById: (id: string | number) => computed(() => combos.value.find(c => c.id === Number(id)))

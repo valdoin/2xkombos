@@ -1,52 +1,22 @@
 [
   {
-    "id": 1771287174495,
+    "id": 1771340388768,
     "characterId": "ahri",
-    "title": "test",
-    "damage": 555,
+    "title": "connard",
+    "damage": 2000,
     "inputs": "",
-    "type": "youtube",
+    "type": "file",
     "difficulty": "medium",
-    "src": "https://www.youtube.com/watch?v=yoShSFSiQxE"
+    "src": "/uploads/videos/1771341496078-montage.mp4"
   },
   {
-    "id": 1771287209858,
-    "characterId": "ahri",
-    "title": "teteze",
-    "damage": 0,
-    "inputs": "",
+    "id": 1771340546558,
+    "characterId": "blitzcrank",
+    "title": "dzdz",
+    "damage": 11111,
+    "inputs": "L L L L L ➜ ➜ ➜ 2 2 4 S1 H S2 S2 > > T S1",
     "type": "youtube",
     "difficulty": "easy",
-    "src": "https://youtu.be/dQw4w9WgXcQ?si=42lA9fuS0MUKzuF8"
-  },
-  {
-    "id": 1771287525228,
-    "characterId": "ahri",
-    "title": "test",
-    "damage": 454556,
-    "inputs": "",
-    "type": "youtube",
-    "difficulty": "medium",
-    "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-  },
-  {
-    "id": 1771287830262,
-    "characterId": "ahri",
-    "title": "tetedqd",
-    "damage": 0,
-    "inputs": "",
-    "type": "file",
-    "difficulty": "medium",
-    "src": "/uploads/videos/1771287829945-montage.mp4"
-  },
-  {
-    "id": 1771288653595,
-    "characterId": "ahri",
-    "title": "FEZFQFFSQFDS",
-    "damage": 0,
-    "inputs": "",
-    "type": "file",
-    "difficulty": "hard",
-    "src": "/uploads/videos/1771288653288-montage.mp4"
+    "src": "https://www.youtube.com/embed/uBcD3T2KWiY"
   }
 ]
