@@ -28,6 +28,10 @@ export const useCombos = () => {
     fd.append('type', comboData.type)
     fd.append('difficulty', comboData.difficulty)
 
+    if (comboData.parentId) fd.append('parentId', comboData.parentId)
+    if (comboData.tagCharacterId) fd.append('tagCharacterId', comboData.tagCharacterId)
+    if (comboData.tagMechanic) fd.append('tagMechanic', comboData.tagMechanic)
+
     if (comboData.type === 'youtube') {
       fd.append('youtubeUrl', getEmbedUrl(comboData.youtubeUrl))
     } else if (comboData.file) {
@@ -64,12 +68,17 @@ export const useCombos = () => {
     }
   }
 
+  const getTagVariations = (parentId: number) => computed(() => 
+    combos.value.filter(c => c.parentId === parentId)
+  )
+
   return {
     combos,
     addCombo,
     deleteCombo,
     loadCombos,
-    getCombosByChar: (charId: string) => computed(() => combos.value.filter(c => c.characterId === charId)),
-    getComboById: (id: string | number) => computed(() => combos.value.find(c => c.id === Number(id)))
+    getCombosByChar: (charId: string) => computed(() => combos.value.filter(c => c.characterId === charId && !c.parentId)),
+    getComboById: (id: string | number) => computed(() => combos.value.find(c => c.id === Number(id))),
+    getTagVariations
   }
 }

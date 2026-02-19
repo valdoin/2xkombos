@@ -86,8 +86,6 @@ function updateModel() {
       </v-btn>
     </div>
 
-    <v-divider class="mb-4"></v-divider>
-
     <v-row dense>
       <v-col cols="12" md="4">
         <div class="text-caption text-uppercase mb-2 text-primary font-weight-bold">Directions</div>

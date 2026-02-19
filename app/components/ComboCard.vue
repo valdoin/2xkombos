@@ -64,11 +64,11 @@ function goToDetail() {
       
       <div class="d-flex justify-space-between align-start mb-2">
         <div class="d-flex align-center flex-wrap" style="gap: 8px">
-            <v-chip size="x-small" variant="outlined" color="grey-lighten-1">
+            <v-chip size="small" variant="flat" color="primary">
               {{ combo.damage }} DMG
             </v-chip>
             <v-chip 
-              size="x-small" 
+              size="small" 
               :color="difficultyInfo.color" 
               variant="flat" 
               class="text-black font-weight-bold"

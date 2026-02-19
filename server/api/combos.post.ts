@@ -33,7 +33,10 @@ export default defineEventHandler(async (event) => {
     inputs: data.inputs,
     type: data.type,
     difficulty: data.difficulty,
-    src: data.type === 'youtube' ? data.youtubeUrl : videoPath
+    src: data.type === 'youtube' ? data.youtubeUrl : videoPath,
+    parentId: data.parentId ? Number(data.parentId) : null,
+    tagCharacterId: data.tagCharacterId || null,
+    tagMechanic: data.tagMechanic || null
   }
 
   let currentCombos = []

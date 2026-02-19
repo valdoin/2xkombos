@@ -52,7 +52,10 @@ export default defineEventHandler(async (event) => {
     damage: Number(data.damage),
     inputs: data.inputs,
     difficulty: data.difficulty,
-    type: data.type
+    type: data.type,
+    parentId: data.parentId ? Number(data.parentId) : oldCombo.parentId,
+    tagCharacterId: data.tagCharacterId || oldCombo.tagCharacterId,
+    tagMechanic: data.tagMechanic || oldCombo.tagMechanic
   }
 
   if (data.type === 'youtube') {
