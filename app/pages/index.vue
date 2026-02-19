@@ -2,21 +2,7 @@
 import { ref, computed } from 'vue'
 useHead({ title: '2XKOMBOS' })
 const search = ref('')
-
-const characters = [
-  { id: 'ahri', name: 'Ahri', image: '/characters/1024px-Ahri_cs.png', role: 'Rushdown' },
-  { id: 'blitzcrank', name: 'Blitzcrank', image: '/characters/1024px-Blitzcrank_cs.png', role: 'Grappler' },
-  { id: 'braum', name: 'Braum', image: '/characters/1024px-Braum_cs.png', role: 'Bruiser' },
-  { id: 'caitlyn', name: 'Caitlyn', image: '/characters/1024px-Caitlyn_cs.png', role: 'Zoner' },
-  { id: 'darius', name: 'Darius', image: '/characters/1024px-Darius_cs.png', role: 'All Rounder' },
-  { id: 'ekko', name: 'Ekko', image: '/characters/800px-Ekko_cs.png', role: 'Mixup' },
-  { id: 'illaoi', name: 'Illaoi', image: '/characters/800px-Illaoi_cs.png', role: 'Bruiser' },
-  { id: 'jinx', name: 'Jinx', image: '/characters/800px-Jinx_cs.png', role: 'Zoner' },
-  { id: 'teemo', name: 'Teemo', image: '/characters/1024px-Teemo_cs.png', role: 'Trap' },
-  { id: 'vi', name: 'Vi', image: '/characters/800px-Vi_cs.png', role: 'Rushdown' },
-  { id: 'warwick', name: 'Warwick', image: '/characters/1024px-Warwick_cs.png', role: 'Rushdown' },
-  { id: 'yasuo', name: 'Yasuo', image: '/characters/800px-Yasuo_cs.png', role: 'All Rounder' },
-]
+const { characters } = useGameData()
 
 const filteredCharacters = computed(() => {
   return characters.filter(char => 

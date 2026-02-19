@@ -11,9 +11,17 @@ const comboId = route.params.comboId as string;
 const charId = route.params.charId as string;
 const showEdit = ref(false)
 const showTagDialog = ref(false)
+const variantSearch = ref('')
 
 const combo = getComboById(comboId);
 const tagVariations = getTagVariations(Number(comboId))
+
+const filteredVariants = computed(() => {
+  if (!variantSearch.value) return tagVariations.value
+  return tagVariations.value.filter(v => 
+    v.tagCharacterId.toLowerCase().includes(variantSearch.value.toLowerCase())
+  )
+})
 
 useHead({
   title: computed(() => combo.value?.title ? `${combo.value.title} - 2XKOMBOS` : 'Chargement...')
@@ -152,43 +160,58 @@ function handleTagSubmit(data: any) {
         Aucune variante enregistrée pour ce combo.
       </div>
 
-      <v-list v-else class="bg-transparent">
-        <v-list-item 
-          v-for="tagCombo in tagVariations" 
-          :key="tagCombo.id" 
-          class="border-thin rounded pa-4 bg-surface cursor-pointer"
-          @click="router.push(`${route.path}/${tagCombo.id}`)"
-        >
-          <template v-slot:prepend>
-            <v-avatar rounded="0" size="50">
-              <v-img :src="getCharImage(tagCombo.tagCharacterId)" cover></v-img>
-            </v-avatar>
-          </template>
-          
-          <div class="w-100">
-            <v-list-item-title class="text-uppercase font-weight-black text-primary mb-2">
-              {{ tagCombo.tagMechanic.toUpperCase() }} - {{ tagCombo.tagCharacterId.toUpperCase() }}
-            </v-list-item-title>
-            <div class="d-flex align-center flex-wrap" style="gap: 8px;">
-              <v-chip size="small" color="primary" variant="flat" class="font-weight-bold">
-                {{ tagCombo.damage }} DMG
-              </v-chip>
-              <v-chip 
-                size="small" 
-                :color="getDifficultyInfo(tagCombo.difficulty)?.color || 'grey'" 
-                variant="flat" 
-                class="text-black font-weight-bold"
-              >
-                {{ getDifficultyInfo(tagCombo.difficulty)?.label || 'Inconnu' }}
-              </v-chip>
-            </div>
-          </div>
+      <template v-else>
+        <v-text-field
+          v-model="variantSearch"
+          label="Filtrer par personnage"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          class="mb-4"
+        ></v-text-field>
 
-          <template v-slot:append>
-            <v-icon class="text-primary">mdi-chevron-right</v-icon>
-          </template>
-        </v-list-item>
-      </v-list>
+        <div v-if="filteredVariants.length === 0" class="text-center py-8 text-grey-darken-2">
+          Aucune variante trouvée pour ce filtre.
+        </div>
+
+        <v-list v-else class="bg-transparent">
+          <v-list-item 
+            v-for="tagCombo in filteredVariants" 
+            :key="tagCombo.id" 
+            class="border-thin rounded pa-4 bg-surface cursor-pointer"
+            @click="router.push(`${route.path}/${tagCombo.id}`)"
+          >
+            <template v-slot:prepend>
+              <v-avatar rounded="0" size="50">
+                <v-img :src="getCharImage(tagCombo.tagCharacterId)" cover></v-img>
+              </v-avatar>
+            </template>
+            
+            <div class="w-100">
+              <v-list-item-title class="text-uppercase font-weight-black text-primary mb-2">
+                {{ tagCombo.tagMechanic.toUpperCase() }} - {{ tagCombo.tagCharacterId.toUpperCase() }}
+              </v-list-item-title>
+              <div class="d-flex align-center flex-wrap" style="gap: 8px;">
+                <v-chip size="small" color="primary" variant="flat" class="font-weight-bold">
+                  {{ tagCombo.damage }} DMG
+                </v-chip>
+                <v-chip 
+                  size="small" 
+                  :color="getDifficultyInfo(tagCombo.difficulty)?.color || 'grey'" 
+                  variant="flat" 
+                  class="text-black font-weight-bold"
+                >
+                  {{ getDifficultyInfo(tagCombo.difficulty)?.label || 'Inconnu' }}
+                </v-chip>
+              </div>
+            </div>
+
+            <template v-slot:append>
+              <v-icon class="text-primary">mdi-chevron-right</v-icon>
+            </template>
+          </v-list-item>
+        </v-list>
+      </template>
     </div>
 
     <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" @submit="handleEdit" />
