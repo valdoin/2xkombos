@@ -20,7 +20,7 @@ const formRef = ref()
 const tab = ref('youtube')
 const difficultyIndex = ref(0)
 const difficulties = Object.keys(difficultyConfig).map(key => ({ key, ...difficultyConfig[key] }))
-const mechanics = ['Double Down', 'Assist', 'Freestyle']
+const mechanics = ['Double Down', '2X Assist', 'Freestyle']
 
 const currentDifficulty = computed(() => {
   const diff = difficulties[difficultyIndex.value]
@@ -116,7 +116,7 @@ const isTagMode = computed(() => !!props.parentId || (props.editMode && !!props.
 
               <div v-if="isTagMode" class="mb-4 pa-3 bg-surface-lighten-1 rounded border-thin">
                 <div class="text-caption text-uppercase text-primary font-weight-bold mb-2">Mécanique Tag</div>
-                <v-select v-model="form.tagMechanic" :items="mechanics" label="Type de suite" variant="outlined"
+                <v-select v-model="form.tagMechanic" :items="mechanics" label="Fuse" variant="outlined"
                   density="compact" :rules="[rules.required]" class="mb-2"></v-select>
                 <v-autocomplete v-model="form.tagCharacterId" :items="characters" item-title="name" item-value="id"
                   label="Partenaire (Tag)" variant="outlined" density="compact" prepend-inner-icon="mdi-account-group"

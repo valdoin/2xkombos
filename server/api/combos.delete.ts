@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const comboToDelete = currentCombos.find((c: any) => c.id == body.id)
-  
+  const variantsToDelete = currentCombos.filter((c: any) => c.parentId == body.id)
   if (comboToDelete && comboToDelete.type === 'file' && comboToDelete.src.startsWith('/uploads')) {
     try {
       const fullPath = join(process.cwd(), 'public', comboToDelete.src)
@@ -25,7 +25,17 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const newCombos = currentCombos.filter((c: any) => c.id != body.id)
+  for (const variant of variantsToDelete) {
+    if (variant.type === 'file' && variant.src.startsWith('/uploads')) {
+      try {
+        const fullPath = join(process.cwd(), 'public', variant.src)
+        await unlink(fullPath)
+      } catch (e) {
+      }
+    }
+  }
+
+  const newCombos = currentCombos.filter((c: any) => c.id != body.id && c.parentId != body.id)
   await writeFile(jsonPath, JSON.stringify(newCombos, null, 2))
 
   return { success: true }

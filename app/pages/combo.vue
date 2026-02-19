@@ -15,10 +15,6 @@ const showTagDialog = ref(false)
 const combo = getComboById(comboId);
 const tagVariations = getTagVariations(Number(comboId))
 
-if (!combo.value) {
-  router.replace(`/${charId}`);
-}
-
 useHead({
   title: computed(() => combo.value?.title ? `${combo.value.title} - 2XKOMBOS` : 'Chargement...')
 })
@@ -139,7 +135,7 @@ function handleTagSubmit(data: any) {
       </v-col>
     </v-row>
 
-    <div class="mt-12">
+    <div class="mt-0">
       <div class="d-flex align-center justify-space-between mb-6 border-b-thin pb-4">
         <div>
           <h2 class="text-h5 font-weight-black text-uppercase text-white">Variantes Tag</h2>
@@ -147,7 +143,7 @@ function handleTagSubmit(data: any) {
         </div>
         <v-btn color="primary" variant="outlined" prepend-icon="mdi-account-multiple-plus"
           @click="showTagDialog = true">
-          Proposer une suite
+          Proposer une variante
         </v-btn>
       </div>
 
@@ -156,11 +152,43 @@ function handleTagSubmit(data: any) {
         Aucune variante enregistrée pour ce combo.
       </div>
 
-      <v-row v-else>
-        <v-col v-for="tagCombo in tagVariations" :key="tagCombo.id" cols="12" md="3">
-          <VariantCard :variant="tagCombo" :parent-route="route.path" />
-        </v-col>
-      </v-row>
+      <v-list v-else class="bg-transparent">
+        <v-list-item 
+          v-for="tagCombo in tagVariations" 
+          :key="tagCombo.id" 
+          class="border-thin rounded pa-4 bg-surface cursor-pointer"
+          @click="router.push(`${route.path}/${tagCombo.id}`)"
+        >
+          <template v-slot:prepend>
+            <v-avatar rounded="0" size="50">
+              <v-img :src="getCharImage(tagCombo.tagCharacterId)" cover></v-img>
+            </v-avatar>
+          </template>
+          
+          <div class="w-100">
+            <v-list-item-title class="text-uppercase font-weight-black text-primary mb-2">
+              {{ tagCombo.tagMechanic.toUpperCase() }} - {{ tagCombo.tagCharacterId.toUpperCase() }}
+            </v-list-item-title>
+            <div class="d-flex align-center flex-wrap" style="gap: 8px;">
+              <v-chip size="small" color="primary" variant="flat" class="font-weight-bold">
+                {{ tagCombo.damage }} DMG
+              </v-chip>
+              <v-chip 
+                size="small" 
+                :color="getDifficultyInfo(tagCombo.difficulty)?.color || 'grey'" 
+                variant="flat" 
+                class="text-black font-weight-bold"
+              >
+                {{ getDifficultyInfo(tagCombo.difficulty)?.label || 'Inconnu' }}
+              </v-chip>
+            </div>
+          </div>
+
+          <template v-slot:append>
+            <v-icon class="text-primary">mdi-chevron-right</v-icon>
+          </template>
+        </v-list-item>
+      </v-list>
     </div>
 
     <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" @submit="handleEdit" />
