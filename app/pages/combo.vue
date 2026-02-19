@@ -58,7 +58,7 @@ function handleTagSubmit(data: any) {
     </div>
 
     <v-row>
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="7">
         <v-card class="border-primary" color="black">
           <div v-if="combo.type === 'youtube'" class="iframe-container" style="padding-top: 56.25%">
             <iframe :src="combo.src" width="100%" height="100%" frameborder="0" allowfullscreen
@@ -68,7 +68,7 @@ function handleTagSubmit(data: any) {
         </v-card>
       </v-col>
 
-      <v-col cols="12" lg="4">
+      <v-col cols="12" lg="5">
         <v-card color="surface" class="h-100 border-thin d-flex flex-column pa-0">
           <div class="pt-2">
             <h1 class="text-h4 font-weight-black text-uppercase text-primary mb-6 px-8">
@@ -92,12 +92,12 @@ function handleTagSubmit(data: any) {
 
             <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Sequence</div>
 
-            <div class="px-8 mb-8">
+            <div class="px-8 mb-2">
               <v-sheet color="background" rounded="lg" class="pa-6 border-thin">
                 <div class="d-flex flex-wrap align-center" style="gap: 8px;">
                   <template v-for="(input, index) in parsedInputs" :key="index">
                     <div class="d-flex align-center justify-center">
-                      <v-img v-if="getInputIcon(input)" :src="getInputIcon(input) || undefined" width="42" height="42"
+                      <v-img v-if="getInputIcon(input)" :src="getInputIcon(input) || undefined" width="38" height="38"
                         contain></v-img>
                       <span v-else class="text-h4 font-weight-bold text-primary mx-1">{{ input }}</span>
                     </div>

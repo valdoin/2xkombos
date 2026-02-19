@@ -12,13 +12,18 @@ const charId = route.params.charId as string;
 const showEdit = ref(false)
 
 const combo = getComboById(variantId); 
+const parentCombo = getComboById(route.params.comboId as string);
 
 if (!combo.value) {
   router.back();
 }
 
-useHead({ 
-  title: computed(() => combo.value?.title ? `${combo.value.title} - 2XKOMBOS` : 'Chargement...') 
+useHead({
+  title: computed(() => {
+    if (!combo.value) return 'Chargement...';
+    const parentTitle = parentCombo.value?.title || 'Combo';
+    return `${parentTitle} - ${combo.value.tagMechanic.toUpperCase()} - 2XKOMBOS`;
+  })
 })
 
 const mainCharImage = computed(() => getCharImage(combo.value?.characterId));
@@ -53,7 +58,7 @@ async function handleDelete() {
     </div>
 
     <v-row>
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="7">
         <v-card class="border-primary" color="black">
           <div v-if="combo.type === 'youtube'" class="iframe-container" style="padding-top: 56.25%">
             <iframe :src="combo.src" width="100%" height="100%" frameborder="0" allowfullscreen
@@ -63,17 +68,12 @@ async function handleDelete() {
         </v-card>
       </v-col>
 
-      <v-col cols="12" lg="4">
+      <v-col cols="12" lg="5">
         <v-card color="surface" class="h-100 border-thin d-flex flex-column pa-0">
           <div class="pt-2">
-            <div class="px-8 mt-4 mb-2">
-               <v-chip color="secondary" variant="flat" size="small" class="mb-2">VARIANTE TAG</v-chip>
-            </div>
-            
             <h1 class="text-h4 font-weight-black text-uppercase text-primary mb-6 px-8">
               {{ combo.tagMechanic }}
             </h1>
-
             <div class="d-flex align-center flex-wrap mb-6 px-8">
               <v-chip size="default" color="primary" variant="flat" class="mr-4">
                 {{ combo.damage }} DMG
@@ -88,7 +88,7 @@ async function handleDelete() {
 
             <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Sequence</div>
             
-            <div class="px-8 mb-8">
+            <div class="px-8 mb-2">
               <v-sheet color="background" rounded="lg" class="pa-6 border-thin">
                 <div class="d-flex flex-wrap align-center" style="gap: 8px;">
                   <template v-for="(input, index) in parsedInputs" :key="index">
@@ -96,8 +96,8 @@ async function handleDelete() {
                        <v-img 
                          v-if="getInputIcon(input)" 
                          :src="getInputIcon(input) || undefined" 
-                         width="42" 
-                         height="42"
+                         width="38" 
+                         height="38"
                          contain
                        ></v-img>
                        <span v-else class="text-h4 font-weight-bold text-primary mx-1">{{ input }}</span>
@@ -121,8 +121,8 @@ async function handleDelete() {
     <v-row justify="center" class="mt-8">
        <v-col cols="12" md="6" lg="4">
           <v-card class="border-thin" color="surface">
-            <v-card-title class="text-center text-uppercase text-caption text-grey">Duo</v-card-title>
-            <div class="d-flex align-center justify-center pa-4">
+            <v-card-title class="text-caption text-grey text-center">Duo</v-card-title>
+            <div class="d-flex align-center justify-center pa-1">
               <div class="d-flex flex-column align-center">
                  <v-avatar 
                     rounded="0" 
