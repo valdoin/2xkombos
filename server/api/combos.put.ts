@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event)
   if (!formData) throw createError({ statusCode: 400, statusMessage: 'No data' })
 
-  const uploadDir = join(process.cwd(), 'public/uploads/videos')
+  const uploadDir = join(process.cwd(), 'uploads/videos')
   const dataDir = join(process.cwd(), 'server/data')
   const jsonPath = join(dataDir, 'combos.json')
 
@@ -13,12 +13,13 @@ export default defineEventHandler(async (event) => {
 
   const data: any = {}
   let newVideoPath = null
+  let uploadedFilename = ''
 
   for (const field of formData) {
     if (field.name === 'file' && field.filename) {
-      const filename = `${Date.now()}-${field.filename}`
-      newVideoPath = `/uploads/videos/${filename}`
-      await writeFile(join(process.cwd(), 'public', newVideoPath), field.data)
+      uploadedFilename = `${Date.now()}-${field.filename}`
+      newVideoPath = `/videos/${uploadedFilename}`
+      await writeFile(join(uploadDir, uploadedFilename), field.data)
     } else if (field.name) {
       data[field.name] = field.data.toString()
     }
@@ -37,11 +38,21 @@ export default defineEventHandler(async (event) => {
 
   const oldCombo = currentCombos[index]
 
-  if (oldCombo.type === 'file' && oldCombo.src.startsWith('/uploads')) {
+  if (oldCombo.type === 'file') {
     if (data.type === 'youtube' || (data.type === 'file' && newVideoPath)) {
-      try {
-        await unlink(join(process.cwd(), 'public', oldCombo.src))
-      } catch (e) {}
+      let oldFilePath = ''
+      
+      if (oldCombo.src.startsWith('/uploads/videos/')) {
+        oldFilePath = join(process.cwd(), 'public', oldCombo.src)
+      } else if (oldCombo.src.startsWith('/videos/')) {
+        oldFilePath = join(uploadDir, oldCombo.src.replace('/videos/', ''))
+      }
+
+      if (oldFilePath) {
+        try {
+          await unlink(oldFilePath)
+        } catch (e) {}
+      }
     }
   }
 

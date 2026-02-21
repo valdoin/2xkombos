@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const data: any = {}
   let videoPath = ''
 
-  const uploadDir = join(process.cwd(), 'public/uploads/videos')
+  const uploadDir = join(process.cwd(), 'uploads/videos')
   const dataDir = join(process.cwd(), 'server/data')
   const jsonPath = join(dataDir, 'combos.json')
 
@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
   for (const field of formData) {
     if (field.name === 'file' && field.filename) {
       const filename = `${Date.now()}-${field.filename}`
-      videoPath = `/uploads/videos/${filename}`
-      await writeFile(join(process.cwd(), 'public', videoPath), field.data)
+      videoPath = `/videos/${filename}`
+      await writeFile(join(uploadDir, filename), field.data)
     } else if (field.name) {
       data[field.name] = field.data.toString()
     }

@@ -154,7 +154,7 @@ const isTagMode = computed(() => !!props.parentId || (props.editMode && !!props.
                     :rules="[rules.youtube]"></v-text-field>
                 </v-window-item>
                 <v-window-item value="file">
-                  <v-file-input v-model="form.file" prepend-icon="mdi-video" label="Vidéo (.mp4)" variant="outlined"
+                  <v-file-input v-model="form.file" prepend-icon="mdi-video" label="Vidéo (.mp4, 50Mo MAX)" variant="outlined"
                     color="primary" :rules="[rules.file]"></v-file-input>
                 </v-window-item>
               </v-window>

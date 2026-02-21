@@ -50,7 +50,7 @@ async function handleDelete() {
 </script>
 
 <template>
-  <v-container v-if="combo" class="h-100">
+  <v-container fluid style="max-width: 1600px" v-if="combo" class="h-100">
     <div class="mb-4">
       <v-btn variant="text" prepend-icon="mdi-arrow-left" @click="router.back()">
         Retour au combo principal
@@ -58,17 +58,17 @@ async function handleDelete() {
     </div>
 
     <v-row>
-      <v-col cols="12" lg="7">
+      <v-col cols="12" lg="8">
         <v-card class="border-primary" color="black">
           <div v-if="combo.type === 'youtube'" class="iframe-container" style="padding-top: 56.25%">
             <iframe :src="combo.src" width="100%" height="100%" frameborder="0" allowfullscreen
               class="position-absolute top-0 left-0"></iframe>
           </div>
-          <video v-else :src="combo.src" controls autoplay class="w-100 d-block" style="max-height: 70vh"></video>
+          <video v-else :src="combo.src" controls autoplay class="w-100 d-block" style="max-height: 85vh"></video>
         </v-card>
       </v-col>
 
-      <v-col cols="12" lg="5">
+      <v-col cols="12" lg="4">
         <v-card color="surface" class="h-100 border-thin d-flex flex-column pa-0">
           <div class="pt-2">
             <h1 class="text-h4 font-weight-black text-uppercase text-primary mb-6 px-8">
@@ -86,7 +86,7 @@ async function handleDelete() {
 
             <v-divider class="mb-6 mx-8"></v-divider>
 
-            <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Sequence</div>
+            <div class="text-h6 text-uppercase mb-2 mt-4 text-grey px-8">Inputs</div>
             
             <div class="px-8 mb-2">
               <v-sheet color="background" rounded="lg" class="pa-6 border-thin">
