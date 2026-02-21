@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   for (const field of formData) {
     if (field.name === 'file' && field.filename) {
-      uploadedFilename = `${Date.now()}-${field.filename}`
+      uploadedFilename = `${Date.now()}-${field.filename.replace(/\s+/g, '-')}`
       newVideoPath = `/videos/${uploadedFilename}`
       await writeFile(join(uploadDir, uploadedFilename), field.data)
     } else if (field.name) {
@@ -40,15 +40,8 @@ export default defineEventHandler(async (event) => {
 
   if (oldCombo.type === 'file') {
     if (data.type === 'youtube' || (data.type === 'file' && newVideoPath)) {
-      let oldFilePath = ''
-      
-      if (oldCombo.src.startsWith('/uploads/videos/')) {
-        oldFilePath = join(process.cwd(), 'public', oldCombo.src)
-      } else if (oldCombo.src.startsWith('/videos/')) {
-        oldFilePath = join(uploadDir, oldCombo.src.replace('/videos/', ''))
-      }
-
-      if (oldFilePath) {
+      if (oldCombo.src && oldCombo.src.startsWith('/videos/')) {
+        const oldFilePath = join(uploadDir, oldCombo.src.replace('/videos/', ''))
         try {
           await unlink(oldFilePath)
         } catch (e) {}

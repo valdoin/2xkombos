@@ -29,12 +29,6 @@ async function handleDelete(comboId: number) {
   }
 }
 
-async function handleSubmit(data: any) {
-  await addCombo({ ...data, characterId: charId })
-  showUpload.value = false
-  editingCombo.value = null
-}
-
 watch(showUpload, (val) => {
   if (!val) {
     setTimeout(() => { editingCombo.value = null }, 300)
@@ -97,7 +91,6 @@ watch(showUpload, (val) => {
       v-model="showUpload" 
       :edit-mode="!!editingCombo"
       :initial-data="editingCombo"
-      @submit="handleSubmit" 
     />
   </div>
 </template>

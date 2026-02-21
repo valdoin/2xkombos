@@ -39,21 +39,11 @@ const parsedInputs = computed(() => {
   return combo.value.inputs.split(' ')
 })
 
-function handleEdit(data: any) {
-  addCombo({ ...data, id: combo.value?.id, characterId: charId })
-  showEdit.value = false
-}
-
 async function handleDelete() {
   if (confirm('Voulez-vous vraiment supprimer ce combo ?')) {
     await deleteCombo(combo.value!.id)
     router.push(`/${charId}`)
   }
-}
-
-function handleTagSubmit(data: any) {
-  addCombo({ ...data, characterId: charId })
-  showTagDialog.value = false
 }
 </script>
 
@@ -214,10 +204,9 @@ function handleTagSubmit(data: any) {
       </template>
     </div>
 
-    <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" @submit="handleEdit" />
+    <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" />
 
-    <UploadDialog v-model="showTagDialog" :parent-id="combo.id" :initial-data="{ inputs: combo.inputs }"
-      @submit="handleTagSubmit" />
+    <UploadDialog v-model="showTagDialog" :parent-id="combo.id" :initial-data="{ inputs: combo.inputs }" />
 
   </v-container>
 </template>

@@ -2,15 +2,9 @@ import { writeFile, readFile, unlink } from 'fs/promises'
 import { join } from 'path'
 
 async function deleteVideo(src: string) {
-  if (!src) return
+  if (!src || !src.startsWith('/videos/')) return
 
-  let fullPath = ''
-
-  if (src.startsWith('/uploads/videos/')) {
-    fullPath = join(process.cwd(), 'public', src)
-  } else if (src.startsWith('/videos/')) {
-    fullPath = join(process.cwd(), 'uploads', src)
-  }
+  const fullPath = join(process.cwd(), 'uploads', src)
 
   if (fullPath) {
     try {

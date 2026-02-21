@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   for (const field of formData) {
     if (field.name === 'file' && field.filename) {
-      const filename = `${Date.now()}-${field.filename}`
+      const filename = `${Date.now()}-${field.filename.replace(/\s+/g, '-')}`
       videoPath = `/videos/${filename}`
       await writeFile(join(uploadDir, filename), field.data)
     } else if (field.name) {

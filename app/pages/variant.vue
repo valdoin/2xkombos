@@ -9,19 +9,15 @@ const { getInputIcon } = useInputData();
 
 const variantId = route.params.variantId as string;
 const charId = route.params.charId as string;
-const showEdit = ref(false)
+const showEdit = ref(false);
 
 const combo = getComboById(variantId); 
 const parentCombo = getComboById(route.params.comboId as string);
-
-if (!combo.value) {
-  router.back();
-}
+const parentTitle = parentCombo.value?.title || 'Combo';
 
 useHead({
   title: computed(() => {
     if (!combo.value) return 'Chargement...';
-    const parentTitle = parentCombo.value?.title || 'Combo';
     return `${parentTitle} - ${combo.value.tagMechanic.toUpperCase()} - 2XKOMBOS`;
   })
 })
@@ -35,11 +31,6 @@ const parsedInputs = computed(() => {
   if (!combo.value?.inputs) return []
   return combo.value.inputs.split(' ')
 })
-
-function handleEdit(data: any) {
-  addCombo({ ...data, id: combo.value?.id, characterId: charId })
-  showEdit.value = false
-}
 
 async function handleDelete() {
   if (confirm('Voulez-vous vraiment supprimer cette variante ?')) {
@@ -72,7 +63,7 @@ async function handleDelete() {
         <v-card color="surface" class="h-100 border-thin d-flex flex-column pa-0">
           <div class="pt-2">
             <h1 class="text-h4 font-weight-black text-uppercase text-primary mb-6 px-8">
-              {{ combo.tagMechanic }}
+              {{ parentTitle + " - " + combo.tagCharacterId + " " + combo.tagMechanic }}
             </h1>
             <div class="d-flex align-center flex-wrap mb-6 px-8">
               <v-chip size="default" color="primary" variant="flat" class="mr-4">
@@ -155,7 +146,7 @@ async function handleDelete() {
        </v-col>
     </v-row>
 
-    <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" @submit="handleEdit" />
+    <UploadDialog v-model="showEdit" edit-mode :initial-data="combo" />
 
   </v-container>
 </template>
